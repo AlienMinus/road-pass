@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Transit Pass - Blank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="logo.png" type="image/png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /*Page A4 Landscape*/
+      @page {
+        size: A4 landscape;
+        margin: 20mm;
+      }
+
+      /* Ensure the standalone pass page is visible (main app hides .pass-page) */
+      .pass-page {
+        display: block !important;
+      }
+
+      /* Fix Date & Time row to span full width and give more space to the Date/Time field */
+      .datetime-row {
+        /* make the last column wide so long Date & Time stays on one line */
+        grid-template-columns: 12% 12% 12% 64% !important;
+        column-gap: 6px !important;
+      }
+
+      /* Ensure the long Date/Time underline does not wrap */
+      .datetime-row .a.long {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: none !important;
+      }
+
+      /* Signature table styling: remove gridlines and increase spacing */
+      .signature-section table {
+        width: 80%;
+        border-collapse: collapse;
+        font-size: 8px;
+      }
+
+      /* Remove visible borders (gridlines) and give more padding/height */
+      .signature-section table,
+      .signature-section table td,
+      .signature-section table th {
+        border: none !important;
+      }
+
+      .signature-section table td,
+      .signature-section table th {
+        /* padding: 12px 10px; */
+        text-align: left;
+        vertical-align: top;
+        min-height: 34px;
+        white-space: nowrap; /* keep header text on single line */
+      }
+
+      .signature-section table tr:nth-child(2) td,
+      .signature-section table tr:nth-child(3) td {
+        /* make the empty rows taller to allow signatures */
+        min-height: 40px;
+      }
+
+      .office-seal {
+        text-align: center;
+        font-weight: bold;
+      }
+
+      /* Add logo as background watermark to both columns */
+      /* .col {
+        background-image: url('logo.png');
+        background-repeat: repeat-x;
+        background-position: center, center;
+        background-size: 35%;
+        background-attachment: fixed;
+        position: relative;
+        opacity: 0.25;
+      } */
+      /* Hide the print button when actually printing */
+      @media print {
+        #printBtn {
+          display: none;
+        }
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="pass-page" id="passPage">
+        <div class="twocol">
+          <div class="col">
+            <div class="header">
+              <img src="logo.png" class="logo" />
+              <div><b>GOVERNMENT OF ODISHA</b></div>
+              <div><b>DEPARTMENT OF STEEL &amp; MINES</b></div>
+              <div><b>FORM-Y</b></div>
+              <div>[See rule 58(1)]</div>
+              <div><b>TRANSIT PASS</b></div>
+              <div><b>FOR MINOR MINERALS</b></div>
+              <div
+                style="
+                  position: absolute;
+                  top: 10px;
+                  right: 20px;
+                  font-weight: bold;
+                "
+              >
+                ORIGINAL COPY
+              </div>
+            </div>
+
+            <div class="row pass-no-block">
+              <span class="small">Pass No.</span>
+              <span id="p1" class="pass-no-number"></span>
+            </div>
+
+            <div class="row two-items datetime-row">
+              <div class="q">1. Book No.</div>
+              <div class="a short" id="b1"></div>
+              <div class="q">Date &amp; Time</div>
+              <div class="a long" id="dt1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">2. Circle Mining Office</div>
+              <div class="a medium" id="c1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">3. Name of the Quarry/Lease/Source of Auction</div>
+              <div class="a long" id="q1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">
+                4. Name of the Licensee/Lessee/Permit Holder/Auction Purchaser
+              </div>
+              <div class="a long" id="l1"></div>
+            </div>
+
+            <div class="row two-items">
+              <div class="q">5. Destination</div>
+              <div class="a short" id="d1"></div>
+              <div class="q">Route</div>
+              <div class="a long wrap" id="r1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">6. Minor Mineral</div>
+              <div class="a short" id="m1"></div>
+            </div>
+
+            <div class="row two-items">
+              <div class="q">7. Permit No.</div>
+              <div class="a short" id="pm1"></div>
+              <div class="q">Date</div>
+              <div class="a tuned" id="pd1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">8. Quantity Permitted (Cum/Tonnes)</div>
+              <div class="a short" id="qnt1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">
+                9. Measurement of Mineral in Carrier (in meter)
+              </div>
+              <div class="a medium" id="v1"></div>
+            </div>
+
+            <table class="measure-table">
+              <tr>
+                <th>Length</th>
+                <th>Breadth</th>
+                <th>Height</th>
+              </tr>
+              <tr>
+                <td><span id="ln1"></span></td>
+                <td><span id="br1"></span></td>
+                <td><span id="ht1"></span></td>
+              </tr>
+            </table>
+
+            <div class="row">
+              <div class="q">10. Cubic Content (Cum)</div>
+              <div class="a short" id="cc1"></div>
+            </div>
+
+            <div class="row two-items">
+              <div class="q">11. Weight of Vehicle (Tonnes) Gross</div>
+              <div class="a short" id="gw1"></div>
+              <div class="q">Tare</div>
+              <div class="a short" id="tw1"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">12. Weight of Mineral</div>
+              <div class="a short" id="mw1"></div>
+            </div>
+
+            <div class="bottom-section">
+              <div style="display: flex; gap: 20px; align-items: flex-start">
+                <div id="qr1" style="flex-shrink: 0"></div>
+                <div class="signature-section" style="flex: 1">
+                  <table>
+                    <tr>
+                      <td>Signature of the person Issuing with date</td>
+                      <td>Signature of the carrier Driver with date</td>
+                      <td>Signature of the checking staff with date</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        Signature of the person receiving <br />
+                        at the destination with date
+                      </td>
+                      <td></td>
+                      <td>
+                        Signature of Inspector<br />I/C with date &amp; time
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="office-seal">
+                        <strong>Office Seal</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col divider">
+            <div class="header">
+              <img src="logo.png" class="logo" />
+              <div><b>GOVERNMENT OF ODISHA</b></div>
+              <div><b>DEPARTMENT OF STEEL &amp; MINES</b></div>
+              <div><b>FORM-Y</b></div>
+              <div>[See rule 58(1)]</div>
+              <div><b>TRANSIT PASS</b></div>
+              <div><b>FOR MINOR MINERALS</b></div>
+              <div
+                style="
+                  position: absolute;
+                  top: 10px;
+                  right: 20px;
+                  font-weight: bold;
+                "
+              >
+                DUPLICATE COPY
+              </div>
+            </div>
+
+            <div class="row pass-no-block">
+              <span class="small">Pass No.</span>
+              <span id="p2" class="pass-no-number"></span>
+            </div>
+
+            <div class="row two-items datetime-row">
+              <div class="q">1. Book No.</div>
+              <div class="a short" id="b2"></div>
+              <div class="q">Date &amp; Time</div>
+              <div class="a long" id="dt2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">2. Circle Mining Office</div>
+              <div class="a medium" id="c2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">3. Name of the Quarry/Lease/Source of Auction</div>
+              <div class="a long" id="q2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">
+                4. Name of the Licensee/Lessee/Permit Holder/Auction Purchaser
+              </div>
+              <div class="a long" id="l2"></div>
+            </div>
+
+            <div class="row two-items">
+              <div class="q">5. Destination</div>
+              <div class="a medium" id="d2"></div>
+              <div class="q">Route</div>
+              <div class="a long wrap" id="r2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">6. Minor Mineral</div>
+              <div class="a short" id="m2"></div>
+            </div>
+
+            <div class="row two-items">
+              <div class="q">7. Permit No.</div>
+              <div class="a short" id="pm2"></div>
+              <div class="q">Date</div>
+              <div class="a short" id="pd2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">8. Quantity Permitted (Cum/Tonnes)</div>
+              <div class="a short" id="qnt2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">9. Measurement in Truck Vehicle No.</div>
+              <div class="a medium" id="v2"></div>
+            </div>
+
+            <table class="measure-table">
+              <tr>
+                <th>Length</th>
+                <th>Breadth</th>
+                <th>Height</th>
+              </tr>
+              <tr>
+                <td><span id="ln2"></span></td>
+                <td><span id="br2"></span></td>
+                <td><span id="ht2"></span></td>
+              </tr>
+            </table>
+
+            <div class="row">
+              <div class="q">10. Cubic Content (Cum)</div>
+              <div class="a short" id="cc2"></div>
+            </div>
+
+            <div class="row two-items">
+              <div class="q">11. Weight of Vehicle (Tonnes) Gross</div>
+              <div class="a short" id="gw2"></div>
+              <div class="q">Tare</div>
+              <div class="a short" id="tw2"></div>
+            </div>
+
+            <div class="row">
+              <div class="q">12. Weight of Mineral</div>
+              <div class="a short" id="mw2"></div>
+            </div>
+
+            <div class="bottom-section">
+              <div style="display: flex; gap: 20px; align-items: flex-start">
+                <div id="qr2" style="flex-shrink: 0"></div>
+                <div class="signature-section" style="flex: 1">
+                  <table>
+                    <tr>
+                      <td>Signature of the person Issuing with date</td>
+                      <td>Signature of the carrier Driver with date</td>
+                      <td>Signature of the checking staff with date</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        Signature of the person receiving <br />
+                        at the destination with date
+                      </td>
+                      <td></td>
+                      <td>
+                        Signature of Inspector<br />I/C with date &amp; time
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="office-seal">
+                        <strong>Office Seal</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br />
+      <button id="printBtn">Print / Download PDF</button>
+      <script>
+        const API_URL = "http://localhost:3000/api/transit-pass";
+
+        function fmt(dt) {
+          if (!dt) return "";
+          const d = new Date(dt);
+          return (
+            d.toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }) +
+            " " +
+            d.toLocaleTimeString("en-GB", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: true,
+            })
+          );
+        }
+
+        function getPassIdFromUrl() {
+          const params = new URLSearchParams(window.location.search);
+          return params.get("id");
+        }
+
+        async function loadAndDisplayPass() {
+          const passId = getPassIdFromUrl();
+
+          if (!passId) {
+            console.error("No pass ID in URL");
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_URL}/${passId}`);
+            const result = await response.json();
+
+            if (result.success && result.data) {
+              const pass = result.data;
+              const fromDT = pass.fromDateTime;
+              const toDT = pass.toDateTime;
+
+              const data = {
+                pass: pass.passNo,
+                book: pass.book || "",
+                dt: fmt(fromDT) + " - " + fmt(toDT),
+                circle: pass.circle || "BHADRAK",
+                quarry: pass.quarry || "MANKIDIA - KA",
+                license: pass.licensee || "SUSANTA KUMAR SAHOO",
+                dest: pass.destination || "",
+                route: pass.route || "",
+                mineral: pass.mineral || "SAND",
+                permit: pass.permitNo || "",
+                pdate: pass.permitDate ? fmt(pass.permitDate) : "",
+                qty: pass.quantity || "",
+                veh: pass.vehicle || "",
+                len: pass.length || "",
+                br: pass.breadth || "",
+                ht: pass.height || "",
+                cc: pass.cubicContent || "",
+                gw: pass.grossWeight || "",
+                tw: pass.tareWeight || "",
+                mw: pass.mineralWeight || "",
+              };
+
+              const map = {
+                p1: "pass",
+                p2: "pass",
+                b1: "book",
+                b2: "book",
+                dt1: "dt",
+                dt2: "dt",
+                c1: "circle",
+                c2: "circle",
+                q1: "quarry",
+                q2: "quarry",
+                l1: "license",
+                l2: "license",
+                d1: "dest",
+                d2: "dest",
+                r1: "route",
+                r2: "route",
+                m1: "mineral",
+                m2: "mineral",
+                pm1: "permit",
+                pm2: "permit",
+                pd1: "pdate",
+                pd2: "pdate",
+                qnt1: "qty",
+                qnt2: "qty",
+                v1: "veh",
+                v2: "veh",
+                ln1: "len",
+                ln2: "len",
+                br1: "br",
+                br2: "br",
+                ht1: "ht",
+                ht2: "ht",
+                cc1: "cc",
+                cc2: "cc",
+                gw1: "gw",
+                gw2: "gw",
+                tw1: "tw",
+                tw2: "tw",
+                mw1: "mw",
+                mw2: "mw",
+              };
+
+              for (let id in map) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = data[map[id]];
+              }
+
+              const qr1 = document.getElementById("qr1");
+              const qr2 = document.getElementById("qr2");
+              if (qr1 && qr2) {
+                qr1.innerHTML = "";
+                qr2.innerHTML = "";
+                const detailUrl = `${window.location.origin}/pass-detail.html?id=${passId}`;
+                new QRCode(qr1, { text: detailUrl, width: 60, height: 60 });
+                new QRCode(qr2, { text: detailUrl, width: 60, height: 60 });
+              }
+            }
+          } catch (error) {
+            console.error("Error loading pass:", error);
+          }
+        }
+
+        // Print button handler
+        document.getElementById("printBtn").onclick = function () {
+          window.print();
+        };
+
+        // Load pass data when page loads
+        window.addEventListener("load", loadAndDisplayPass);
+      </script>
+    </div>
+  </body>
+</html>

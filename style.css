@@ -1,0 +1,294 @@
+/* -------------------- A4 PRINT SETTINGS -------------------- */
+/*Print in landscape mode*/
+@page {
+    size: A4 landscape;
+    margin: 10mm 15mm 10mm 15mm;
+}
+body {
+    font-family: "Times New Roman", serif;
+    margin: 0;
+    background: #f0f0f0;
+}
+
+/* Page wrapper */
+.wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* -------------------- INPUT FORM -------------------- */
+.card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+input, textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0d0d0;
+    background: #fafafa;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.25;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+    outline: none;
+    margin: 6px 0 12px 0;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #0066ff;
+    box-shadow: 0 0 0 4px rgba(0,102,255,0.08);
+    background: #fff;
+}
+
+input[readonly], textarea[readonly], select[readonly],
+input:disabled, textarea:disabled, select:disabled {
+    background: #f5f5f7;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.95;
+}
+
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #bdbdbd;
+}
+
+/* Native controls adjustments */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #888 50%),
+                      linear-gradient(135deg, #888 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #222;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 10px;
+}
+/* Make specific form rows span full width and allow inline two-column layouts */
+.span-2 {
+    grid-column: 1 / -1;
+}
+.inline-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: end;
+}
+/* Row with two Q&A pairs on one line */
+.row.two-items {
+    grid-template-columns: 37% 11% 13% 45% !important;
+    column-gap: 5px !important;
+    margin: 2px 0;
+}
+button {
+    padding: 8px 16px;
+    background: #0033A1;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* -------------------- PASS PAGE -------------------- */
+.pass-page {
+    background: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    display: none;
+}
+
+/* Two columns (Original + Duplicate) */
+.twocol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0px;
+    border: 1px solid #000;
+}
+
+.col {
+    padding: 0 20px;
+    font-size: 11px;
+    position: relative;
+}
+
+/* Vertical dotted divider */
+.divider {
+    border-left: 2px dotted black;
+}
+
+/* Header */
+.logo {
+    height: 55px;
+    margin-top: 10px;
+}
+.header {
+    text-align: center;
+    line-height: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Pass No placement EXACT like govt format */
+.pass-no-block {
+    position: absolute;
+    right: 20px;
+    top: 92px;
+    text-align: right;
+    font-size: 11px;
+}
+.pass-no-block .small {
+    display: block;
+}
+.pass-no-number {
+    color: #0033A1;
+    border-bottom: 1px dotted #0033A1;
+    font-weight: bold;
+    min-width: 100px;
+    display: inline-block;
+    text-align: right;
+}
+
+/* ----------------- Question - Answer TABLE EXACT FORMAT ----------------- */
+.row {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    margin: 2px 0;
+    line-height: 1.4;
+}
+.q {
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: 500;
+    white-space: normal;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+}
+.a {
+    font-size: 11px;
+    font-weight: bold;
+    color: #0033A1;
+    border-bottom: 1px dotted #0033A1;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    min-height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    vertical-align: text-bottom;
+}
+
+
+
+/* Underline sizes EXACT to sample */
+.short      { max-width: 80px; }
+.medium     { max-width: 110px; }
+.tuned      { max-width: 150px; }
+.long       { max-width: 180px; }
+.xlong      { max-width: 240px; }
+
+/* Route field reduced font size */
+#r1, #r2 {
+    font-size: 9px;
+}
+
+/* TABLE for Length/Breadth/Height EXACT */
+.measure-table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 4px;
+}
+.measure-table th, .measure-table td {
+    border: 1px solid black;
+    padding: 3px;
+    text-align: center;
+    font-size: 11px;
+}
+.measure-table td span {
+    display: inline-block;
+    border-bottom: 1px dotted #0033A1;
+    color: #0033A1;
+    width: 70px;
+    font-weight: bold;
+}
+
+/* QR + Signature EXACT layout */
+.bottom-section {
+    display: grid;
+    grid-template-columns: 100px auto;
+    margin-top: 10px;
+}
+.sign-block {
+    font-size: 8px;
+    line-height: 14px;
+}
+.center {
+    text-align: center;
+}
+.bold {
+    font-weight: bold;
+}
+ .signature-section {
+    width: 80%;
+    margin-top: 20px;
+    font-family: "Times New Roman", serif;
+    font-size: 8px;
+  }
+
+  .signature-section table {
+    width: 80%;
+    border-collapse: collapse;
+  }
+
+  .signature-section td {
+    width: 33%;
+    vertical-align: top;
+    padding: 4px 10px;
+    text-align: left;
+    
+  }
+
+ 
+    .office-seal {
+        text-align: center !important;
+        font-weight: bold;
+        padding-top: 10px;
+    }
+/* Print mode */
+@media print {
+    .card, #printBtn, h1 { display: none !important; }
+    body { background: white; }
+    .pass-page { box-shadow: none; border: none; }
+    @page {
+        margin: 10mm 15mm 10mm 15mm;
+        size: A4 landscape;
+        scale: 85%;
+    }
+}

@@ -1,582 +1,686 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Odisha Form-Y Transit Pass</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<style>
-
-/* -------------------- A4 PRINT SETTINGS -------------------- */
-@page {
-    size: A4;
-    margin: 12mm 10mm 12mm 10mm;
-}
-body {
-    font-family: "Times New Roman", serif;
-    margin: 0;
-    background: #f0f0f0;
-}
-
-/* Page wrapper */
-.wrapper {
-    width: 100%;
-    max-width: 1200px;
-    margin: auto;
-}
-
-/* -------------------- INPUT FORM -------------------- */
-.card {
-    background: #fff;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 20px auto;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-}
-input, textarea {
-    width: 100%;
-    padding: 6px;
-    border: 1px solid #999;
-    border-radius: 4px;
-    font-size: 14px;
-}
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-    gap: 10px;
-}
-button {
-    padding: 8px 16px;
-    background: #0033A1;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-/* -------------------- PASS PAGE -------------------- */
-.pass-page {
-    background: #fff;
-    padding: 15px;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-    display: none;
-}
-
-/* Two columns (Original + Duplicate) */
-.twocol {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 0px;
-    border: 1px solid #000;
-}
-
-.col {
-    padding: 0 20px;
-    font-size: 11px;
-    position: relative;
-}
-
-/* Vertical dotted divider */
-.divider {
-    border-left: 2px dotted black;
-}
-
-/* Header */
-.logo {
-    height: 55px;
-    margin-top: 10px;
-}
-.header {
-    text-align: center;
-    line-height: 15px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-/* Pass No placement EXACT like govt format */
-.pass-no-block {
-    position: absolute;
-    right: 20px;
-    top: 92px;
-    text-align: right;
-    font-size: 11px;
-}
-.pass-no-block .small {
-    display: block;
-}
-.pass-no-number {
-    color: #0033A1;
-    border-bottom: 1px dotted #0033A1;
-    font-weight: bold;
-    min-width: 130px;
-    display: inline-block;
-    text-align: right;
-}
-
-/* ----------------- Question - Answer TABLE EXACT FORMAT ----------------- */
-.row {
-    display: grid;
-    grid-template-columns: 37% 63%;
-    margin: 4px 0;
-}
-.q {
-    font-size: 11px;
-    line-height: 13px;
-}
-.a {
-    font-size: 11px;
-    font-weight: bold;
-    color: #0033A1;
-    border-bottom: 1px dotted #0033A1;
-    padding: 0 2px;
-    display: inline-block;
-}
-
-/* Underline sizes EXACT to sample */
-.short      { width: 90px; }
-.medium     { width: 120px; }
-.long       { width: 200px; }
-.xlong      { width: 270px; }
-
-/* TABLE for Length/Breadth/Height EXACT */
-.measure-table {
-    width: 80%;
-    border-collapse: collapse;
-    margin-top: 4px;
-}
-.measure-table th, .measure-table td {
-    border: 1px solid black;
-    padding: 3px;
-    text-align: center;
-    font-size: 11px;
-}
-.measure-table td span {
-    display: inline-block;
-    border-bottom: 1px dotted #0033A1;
-    color: #0033A1;
-    width: 70px;
-    font-weight: bold;
-}
-
-/* QR + Signature EXACT layout */
-.bottom-section {
-    display: grid;
-    grid-template-columns: 100px auto;
-    margin-top: 10px;
-}
-.sign-block {
-    font-size: 10px;
-    line-height: 14px;
-}
-.center {
-    text-align: center;
-}
-.bold {
-    font-weight: bold;
-}
- .signature-section {
-    width: 100%;
-    margin-top: 20px;
-    font-family: "Times New Roman", serif;
-    font-size: 12px;
-  }
-
-  .signature-section table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .signature-section td {
-    width: 33%;
-    vertical-align: top;
-    padding: 4px 10px;
-    text-align: left;
-  }
-
- 
-    .office-seal {
-        text-align: center !important;
-        font-weight: bold;
-        padding-top: 10px;
-    }
-/* Print mode */
-@media print {
-    .card, #printBtn, h1 { display: none !important; }
-    body { background: white; }
-    .pass-page { box-shadow: none; border: none; }
-}
-
-</style>
-</head>
-<body>
-
-<div class="wrapper">
-
-<h1 style="text-align:center;">Odisha Form-Y Transit Pass Generator</h1>
-
-
-<!-- -------------------- INPUT FORM -------------------- -->
-<div class="card">
-<form id="form">
-
-<div class="grid">
-    <div><label>Book No.</label><input id="book"></div>
-    <div><label>From Date & Time</label><input id="fromDT" type="datetime-local"></div>
-    <div><label>To Date & Time</label><input id="toDT" type="datetime-local"></div>
-    <div><label>Circle Mining Office</label><input id="circle" value="Bhadrak" readonly></div>
-    <div><label>Quarry/Source</label><input id="quarry" value="Mankidia - ka" readonly></div>
-    <div><label>Licensee/Lessee</label><input id="license" value="Susanta Kumar Sahoo" readonly></div>
-    <div><label>Destination</label><textarea id="dest"></textarea></div>
-    <div><label>Route</label><textarea id="route"></textarea></div>
-    <div><label>Mineral</label><input id="mineral" value="Sand" readonly></div>
-    <div><label>Permit No.</label><input id="permit"></div>
-    <div><label>Permit Date</label><input id="permitDate" type="date"></div>
-    <div>
-    <label>Quantity</label>
-    <select id="qty">
-        <option value="30.00 Cum">30 Cum</option>
-        <option value="22.00 Cum">22 Cum</option>
-        <option value="18.00 Cum">18 Cum</option>
-        <option value="14.00 Cum">14 Cum</option>
-        <option value="8.00 Cum">8 Cum</option>
-        <option value="5.00 Cum">5 Cum</option>
-        <option value="3.00 Cum">3 Cum</option>
-        <option value="2.00 Cum">2 Cum</option>
-    </select>
-</div>
-
-    <div><label>Vehicle No.</label><input id="vehicle"></div>
-    <div><label>Length</label><input id="len"></div>
-    <div><label>Breadth</label><input id="br"></div>
-    <div><label>Height</label><input id="ht"></div>
-    <div><label>Cubic Content</label><input id="cc"></div>
-    <div><label>Gross Weight</label><input id="gw"></div>
-    <div><label>Tare Weight</label><input id="tw"></div>
-    <div><label>Mineral Weight</label><input id="mw"></div>
-</div>
-
-<br>
-<button type="submit">Generate Pass</button>
-
-</form>
-</div>
-
-
-<!-- -------------------- GENERATED PASS (PRINT FORMAT) -------------------- -->
-<div class="pass-page" id="passPage">
-
-<div class="twocol">
-
-<!------------------ ORIGINAL COPY COLUMN ------------------>
-<div class="col">
-
-<div class="header">
-    <img src="logo.png" class="logo">
-    <div><b>GOVERNMENT OF ODISHA</b></div>
-    <div><b>DEPARTMENT OF STEEL & MINES</b></div>
-    <div><b>FORM-Y</b></div>
-    <div>[See rule 58(1)]</div>
-    <br>
-    <div><b>TRANSIT PASS</b></div>
-    <div><b>FOR MINOR MINERALS</b></div>
-    <br>
-    <div style="position:absolute; top:10px; right:20px; font-weight:bold;">ORIGINAL COPY</div>
-</div>
-
-<div class="pass-no-block">
-    <span class="small">Pass</span>
-    <span class="small">No.</span>
-    <span id="p1" class="pass-no-number"></span>
-</div>
-
-<br><br><br>
-
-<!-- Strict Govt Q/A Layout -->
-<div class="row"><div class="q">1. Book No.</div> <div class="a short" id="b1"></div></div>
-<div class="row"><div class="q">   Date & Time</div> <div class="a long" id="dt1"></div></div>
-
-<div class="row"><div class="q">2. Circle Mining Office</div> <div class="a medium" id="c1"></div></div>
-
-<div class="row"><div class="q">3. Name of the Quarry/Lease/Source of Auction</div> <div class="a long" id="q1"></div></div>
-
-<div class="row"><div class="q">4. Name of the Licensee/Lessee/Permit Holder/Auction Purchaser</div> <div class="a long" id="l1"></div></div>
-
-<div class="row"><div class="q">5. Destination</div> <div class="a medium" id="d1"></div></div>
-<div class="row"><div class="q">   Route</div> <div class="a xlong" id="r1"></div></div>
-
-<div class="row"><div class="q">6. Minor Mineral</div> <div class="a short" id="m1"></div></div>
-
-<div class="row"><div class="q">7. Permit No.</div> <div class="a short" id="pm1"></div></div>
-<div class="row"><div class="q">   Date</div> <div class="a short" id="pd1"></div></div>
-
-<div class="row"><div class="q">8. Quantity Permitted (Cum/Tonnes)</div> <div class="a short" id="qnt1"></div></div>
-
-<div class="row"><div class="q">9. Measurement of Mineral in Carrier (in meter)</div> <div class="a medium" id="v1"></div></div>
-
-<!-- TABLE EXACT -->
-<table class="measure-table">
-    <tr><th>Length</th><th>Breadth</th><th>Height</th></tr>
-    <tr>
-        <td><span id="ln1"></span></td>
-        <td><span id="br1"></span></td>
-        <td><span id="ht1"></span></td>
-    </tr>
-</table>
-
-<div class="row"><div class="q">10. Cubic Content (Cum)</div> <div class="a short" id="cc1"></div></div>
-
-<div class="row"><div class="q">11. Weight of Vehicle (Tonnes) Gross</div> <div class="a short" id="gw1"></div></div>
-<div class="row"><div class="q">   Tare</div> <div class="a short" id="tw1"></div></div>
-
-<div class="row"><div class="q">12. Weight of Mineral</div> <div class="a short" id="mw1"></div></div>
-
-
-<!-- QR + Signature EXACT -->
-<div class="bottom-section">
-    <div id="qr1"></div>
-   <div class="signature-section">
-  <table>
-    <tr>
-      <td>
-        Signature of the<br>
-        person Issuing with<br>
-        date
-      </td>
-
-      <td>
-        Signature of the<br>
-        carrier Driver with<br>
-        date
-      </td>
-
-      <td>
-        Signature of the<br>
-        checking staff with<br>
-        date
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        Signature of the person receiving<br>
-        at the destination with date
-      </td>
-
-      <td></td>
-
-      <td>
-        Signature of Inspector<br>
-        I/C with date &amp; time
-      </td>
-    </tr>
-
-    <tr>
-      <td colspan="3" class="office-seal">
-        <strong>Office Seal</strong>
-      </td>
-    </tr>
-  </table>
-</div>
-</div>
-
-</div>
-
-
-
-<!------------------ DUPLICATE COPY COLUMN ------------------>
-<div class="col divider">
-
-<div class="header">
-    <img src="logo.png" class="logo">
-    <div><b>GOVERNMENT OF ODISHA</b></div>
-    <div><b>DEPARTMENT OF STEEL & MINES</b></div>
-    <div><b>FORM-Y</b></div>
-    <div>[See rule 58(1)]</div>
-    <br>
-    <div><b>TRANSIT PASS</b></div>
-    <div><b>FOR MINOR MINERALS</b></div>
-    <br>
-    <div style="position:absolute; top:10px; right:20px; font-weight:bold;">DUPLICATE COPY</div>
-</div>
-
-<div class="pass-no-block">
-    <span class="small">Pass</span>
-    <span class="small">No.</span>
-    <span id="p2" class="pass-no-number"></span>
-</div>
-
-<br><br><br>
-
-
-<!-- Same strict Q/A layout -->
-<div class="row"><div class="q">1. Book No.</div> <div class="a short" id="b2"></div></div>
-<div class="row"><div class="q">   Date & Time</div> <div class="a long" id="dt2"></div></div>
-
-<div class="row"><div class="q">2. Circle Mining Office</div> <div class="a medium" id="c2"></div></div>
-
-<div class="row"><div class="q">3. Name of the Quarry/Lease/Source of Auction</div> <div class="a long" id="q2"></div></div>
-
-<div class="row"><div class="q">4. Name of the Licensee/Lessee/Permit Holder/Auction Purchaser</div> <div class="a long" id="l2"></div></div>
-
-<div class="row"><div class="q">5. Destination</div> <div class="a medium" id="d2"></div></div>
-<div class="row"><div class="q">   Route</div> <div class="a xlong" id="r2"></div></div>
-
-<div class="row"><div class="q">6. Minor Mineral</div> <div class="a short" id="m2"></div></div>
-
-<div class="row"><div class="q">7. Permit No.</div> <div class="a short" id="pm2"></div></div>
-<div class="row"><div class="q">   Date</div> <div class="a short" id="pd2"></div></div>
-
-<div class="row"><div class="q">8. Quantity Permitted (Cum/Tonnes)</div> <div class="a short" id="qnt2"></div></div>
-
-<div class="row"><div class="q">9. Measurement in Truck Vehicle No.</div> <div class="a medium" id="v2"></div></div>
-
-<table class="measure-table">
-    <tr><th>Length</th><th>Breadth</th><th>Height</th></tr>
-    <tr>
-        <td><span id="ln2"></span></td>
-        <td><span id="br2"></span></td>
-        <td><span id="ht2"></span></td>
-    </tr>
-</table>
-
-<div class="row"><div class="q">10. Cubic Content (Cum)</div> <div class="a short" id="cc2"></div></div>
-
-<div class="row"><div class="q">11. Weight of Vehicle (Tonnes) Gross</div> <div class="a short" id="gw2"></div></div>
-<div class="row"><div class="q">   Tare</div> <div class="a short" id="tw2"></div></div>
-
-<div class="row"><div class="q">12. Weight of Mineral</div> <div class="a short" id="mw2"></div></div>
-
-<div class="bottom-section">
-    <div id="qr2"></div>
-    <div class="signature-section">
-  <table>
-    <tr>
-      <td>
-        Signature of the<br>
-        person Issuing with<br>
-        date
-      </td>
-      <td>
-        Signature of the<br>
-        carrier Driver with<br>
-        date
-      </td>
-      <td>
-        Signature of the<br>
-        checking staff with<br>
-        date
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Signature of the person receiving<br>
-        at the destination with date
-      </td>
-      <td></td>
-      <td>
-        Signature of Inspector<br>
-        I/C with date &amp; time
-      </td>
-    </tr>
-    <tr>
-      <td colspan="3" class="office-seal">
-        Office Seal
-      </td>
-    </tr>
-  </table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-<br>
-<button id="printBtn" onclick="window.print()">Print / Download PDF</button>
-
-</div>
-
-<script>
-
-function fmt(dt){
-    if(!dt) return "";
-    const d = new Date(dt);
-    return d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"})+" "+
-           d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});
-}
-
-document.getElementById("form").onsubmit = function(e){
-    e.preventDefault();
-
-    const pn = "A" + Date.now();
-
-    const data = {
-        pass: pn,
-        book: book.value,
-        dt: fmt(fromDT.value) + " - " + fmt(toDT.value),
-        circle: "BHADRAK",
-        quarry: "MANKIDIA - KA",
-        license: "SUSANTA KUMAR SAHOO",
-        dest: dest.value.toUpperCase(),
-        route: route.value.toUpperCase(),
-        mineral: "SAND",
-        permit: permit.value.toUpperCase(),
-        pdate: permitDate.value,
-        qty: qty.value,
-        veh: vehicle.value.toUpperCase(),
-        len: len.value,
-        br: br.value,
-        ht: ht.value,
-        cc: cc.value,
-        gw: gw.value,
-        tw: tw.value,
-        mw: mw.value
-    };
-
-    // Fill Original & Duplicate
-    const map = {
-        p1:"pass", p2:"pass",
-        b1:"book", b2:"book",
-        dt1:"dt",  dt2:"dt",
-        c1:"circle", c2:"circle",
-        q1:"quarry", q2:"quarry",
-        l1:"license", l2:"license",
-        d1:"dest", d2:"dest",
-        r1:"route", r2:"route",
-        m1:"mineral", m2:"mineral",
-        pm1:"permit", pm2:"permit",
-        pd1:"pdate", pd2:"pdate",
-        qnt1:"qty", qnt2:"qty",
-        v1:"veh", v2:"veh",
-        ln1:"len", ln2:"len",
-        br1:"br", br2:"br",
-        ht1:"ht", ht2:"ht",
-        cc1:"cc", cc2:"cc",
-        gw1:"gw", gw2:"gw",
-        tw1:"tw", tw2:"tw",
-        mw1:"mw", mw2:"mw"
-    };
-
-    for(let id in map){
-        document.getElementById(id).textContent = data[map[id]];
-    }
-
-    // QR
-    qr1.innerHTML = "";
-    qr2.innerHTML = "";
-    new QRCode(qr1,{text:pn,width:80,height:80});
-    new QRCode(qr2,{text:pn,width:80,height:80});
-
-    passPage.style.display = "block";
-    passPage.scrollIntoView({behavior:'smooth'});
-};
-
-</script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Transit Pass System - Login</title>
+    <link rel="shortcut icon" href="logo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+      }
+
+      .login-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        animation: slideIn 0.5s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .login-icon {
+        font-size: 48px;
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .login-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .login-subtitle {
+        font-size: 14px;
+        color: #888;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #d0d0d0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+        background: #f8f9fa;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      }
+
+      .form-group input::placeholder {
+        color: #bdbdbd;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .login-btn:active {
+        transform: translateY(0);
+      }
+
+      .login-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 12px 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        border-left: 4px solid #dc3545;
+        animation: shake 0.5s;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      .demo-credentials {
+        background: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #004085;
+      }
+
+      .demo-credentials strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .demo-credentials code {
+        background: #fff;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+      }
+
+      /* Navigation Menu - Hidden by default */
+      .nav-menu {
+        display: none;
+        min-height: 100vh;
+        background: #f8f9fa;
+      }
+
+      .nav-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-header h1 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 28px;
+        margin-bottom: 5px;
+      }
+
+      .nav-header p {
+        margin: 0;
+        opacity: 0.95;
+        font-size: 14px;
+      }
+
+      .user-info {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+        border-radius: 6px;
+        margin-top: 15px;
+        font-size: 13px;
+      }
+
+      .logout-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s;
+        margin-top: 10px;
+        width: 100%;
+      }
+
+      .logout-btn:hover {
+        background: #c82333;
+      }
+
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 30px;
+      }
+
+      .menu-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: #333;
+      }
+
+      .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .menu-card-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+      }
+
+      .menu-card-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      .menu-card-desc {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .menu-card.input {
+        border-left: 5px solid #667eea;
+      }
+
+      .menu-card.status {
+        border-left: 5px solid #28a745;
+      }
+
+      .menu-card.admin {
+        border-left: 5px solid #dc3545;
+      }
+
+      @media (max-width: 768px) {
+        .login-container {
+          padding: 15px;
+        }
+
+        .login-card {
+          padding: 30px 20px;
+        }
+
+        .login-icon {
+          font-size: 36px;
+        }
+
+        .login-title {
+          font-size: 20px;
+        }
+
+        .login-subtitle {
+          font-size: 12px;
+        }
+
+        .form-group label {
+          font-size: 13px;
+        }
+
+        .form-group input {
+          padding: 10px 12px;
+          font-size: 13px;
+        }
+
+        .login-btn {
+          padding: 10px;
+          font-size: 14px;
+        }
+
+        .demo-credentials {
+          font-size: 11px;
+        }
+
+        .nav-header {
+          padding: 20px 0;
+        }
+
+        .nav-header h1 {
+          font-size: 22px;
+        }
+
+        .nav-header p {
+          font-size: 12px;
+        }
+
+        .user-info {
+          font-size: 12px;
+          padding: 12px 15px;
+        }
+
+        .logout-btn {
+          padding: 7px 14px;
+          font-size: 13px;
+        }
+
+        .menu-grid {
+          padding: 20px;
+          gap: 15px;
+        }
+
+        .menu-card {
+          padding: 20px;
+        }
+
+        .menu-card-icon {
+          font-size: 40px;
+        }
+
+        .menu-card-title {
+          font-size: 16px;
+        }
+
+        .menu-card-desc {
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          padding: 10px;
+        }
+
+        .login-card {
+          padding: 25px 15px;
+        }
+
+        .login-header {
+          margin-bottom: 20px;
+        }
+
+        .login-icon {
+          font-size: 32px;
+          margin-bottom: 12px;
+        }
+
+        .login-title {
+          font-size: 18px;
+          margin-bottom: 3px;
+        }
+
+        .login-subtitle {
+          font-size: 11px;
+        }
+
+        .form-group {
+          margin-bottom: 15px;
+        }
+
+        .form-group label {
+          font-size: 12px;
+          margin-bottom: 6px;
+        }
+
+        .form-group input {
+          padding: 9px 10px;
+          font-size: 12px;
+        }
+
+        .login-btn {
+          padding: 9px;
+          font-size: 13px;
+          margin-top: 8px;
+        }
+
+        .demo-credentials {
+          font-size: 10px;
+          padding: 10px;
+          margin-top: 15px;
+        }
+
+        .demo-credentials strong {
+          margin-bottom: 4px;
+        }
+
+        .demo-credentials div {
+          margin-bottom: 2px;
+        }
+
+        .nav-header {
+          padding: 15px 0;
+        }
+
+        .nav-header h1 {
+          font-size: 18px;
+          margin-bottom: 3px;
+        }
+
+        .nav-header p {
+          font-size: 11px;
+        }
+
+        .user-info {
+          font-size: 11px;
+          padding: 10px 12px;
+          margin-top: 12px;
+        }
+
+        .logout-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+          margin-top: 8px;
+        }
+
+        .menu-grid {
+          padding: 15px;
+          gap: 12px;
+          grid-template-columns: 1fr;
+        }
+
+        .menu-card {
+          padding: 18px;
+        }
+
+        .menu-card-icon {
+          font-size: 36px;
+          margin-bottom: 12px;
+        }
+
+        .menu-card-title {
+          font-size: 14px;
+          margin-bottom: 6px;
+        }
+
+        .menu-card-desc {
+          font-size: 11px;
+          line-height: 1.4;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login Form -->
+    <div id="loginSection" class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-icon">🔐</div>
+          <h1 class="login-title">Transit Pass System</h1>
+          <p class="login-subtitle">Administrator Login</p>
+        </div>
+
+        <div
+          id="errorMessage"
+          class="error-message"
+          style="display: none"
+        ></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="username">
+              <i class="bi bi-person"></i> Admin ID
+            </label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Enter admin ID"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password"> <i class="bi bi-lock"></i> Password </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter password"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <button type="submit" class="login-btn" id="loginBtn">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+          </button>
+        </form>
+
+        <div class="demo-credentials">
+          <strong>Demo Credentials:</strong>
+          <div>Admin ID: <code>admin</code></div>
+          <div>Password: <code>12345</code></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div id="navSection" class="nav-menu">
+      <div class="nav-header">
+        <div class="container">
+          <h1>🚛 Transit Pass Management System</h1>
+          <p>Manage and track transit passes for minor minerals</p>
+          <div class="user-info">
+            👤 Logged in as: <strong id="loggedUsername">admin</strong>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="menu-grid">
+          <!-- Generate Pass Card -->
+          <a href="input.html" class="menu-card input">
+            <div class="menu-card-icon">📝</div>
+            <div class="menu-card-title">Generate Pass</div>
+            <div class="menu-card-desc">
+              Create new transit pass for mineral transportation
+            </div>
+          </a>
+
+          <!-- View Status Card -->
+          <a href="status.html" class="menu-card status">
+            <div class="menu-card-icon">📊</div>
+            <div class="menu-card-title">View Status</div>
+            <div class="menu-card-desc">
+              Check pass validity and current status
+            </div>
+          </a>
+
+          <!-- Admin Panel Card -->
+          <a href="admin.html" class="menu-card admin">
+            <div class="menu-card-icon">⚙️</div>
+            <div class="menu-card-title">Admin Panel</div>
+            <div class="menu-card-desc">
+              Manage all passes and view analytics
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+      // Credentials object - will be loaded from config
+      let VALID_CREDENTIALS = {
+        admin: "12345"
+      };
+
+      // Load config and set credentials
+      async function initializeApp() {
+        try {
+          const response = await fetch('/api/config');
+          if (response.ok) {
+            const config = await response.json();
+            // Set credentials from config
+            VALID_CREDENTIALS = {
+              [config.ADMIN_ID]: process.env.ADMIN_PASSWORD || '12345'
+            };
+            console.log('App initialized with credentials from .env');
+          }
+        } catch (error) {
+          console.log('Using default credentials');
+          // Use defaults already set
+        }
+      }
+
+      // Initialize on page load
+      window.addEventListener('load', () => {
+        initializeApp();
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        if (isLoggedIn) {
+          showNavMenu();
+        }
+      });
+
+      // Handle login
+      function handleLogin(event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        const errorMsg = document.getElementById("errorMessage");
+        const loginBtn = document.getElementById("loginBtn");
+
+        // Validate credentials
+        if (
+          VALID_CREDENTIALS[username] &&
+          VALID_CREDENTIALS[username] === password
+        ) {
+          // Store login info
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("loggedUsername", username);
+
+          // Show nav menu
+          showNavMenu();
+          errorMsg.style.display = "none";
+        } else {
+          // Show error
+          errorMsg.style.display = "block";
+          errorMsg.textContent = "❌ Invalid Admin ID or Password";
+          document.getElementById("password").value = "";
+          document.getElementById("password").focus();
+
+          // Shake animation
+          loginBtn.style.animation = "none";
+          setTimeout(() => {
+            loginBtn.style.animation = "shake 0.5s";
+          }, 10);
+        }
+      }
+
+      // Show navigation menu
+      function showNavMenu() {
+        const username = localStorage.getItem("loggedUsername") || "admin";
+        document.getElementById("loggedUsername").textContent = username;
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("navSection").style.display = "block";
+      }
+
+      // Logout
+      function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("loggedUsername");
+          location.reload();
+        }
+      }
+
+      // Prevent back button after logout
+      window.addEventListener("pageshow", (event) => {
+        if (event.persisted && !localStorage.getItem("isLoggedIn")) {
+          location.href = "index.html";
+        }
+      });
+    </script>
+  </body>
 </html>

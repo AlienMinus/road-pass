@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Transit Pass - Input Form</title>
+    <link rel="shortcut icon" href="logo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  </head>
+  <body>
+    <section class="container py-4 m-5">
+      <form class="row g-4 p-4 border rounded bg-light" id="form">
+        <h1 class="text-center mb-4">Odisha Form-Y Transit Pass Generator</h1>
+        <hr />
+
+        <!-- ─────────────────────── Group 1: Pass Information ─────────────────────── -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">Pass Information</h4>
+
+        <!-- Book -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Book No.</label>
+            <input
+              type="text"
+              class="form-control w-50"
+              id="book"
+              name="book"
+              placeholder="Enter Book Number"
+            />
+          </div>
+        </div>
+
+        <!-- From Date & Time -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">From Date &amp; Time</label>
+            <input
+              type="datetime-local"
+              class="form-control w-50"
+              id="fromDT"
+              name="fromDT"
+            />
+          </div>
+        </div>
+
+        <!-- To Date & Time -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">To Date &amp; Time</label>
+            <input
+              type="datetime-local"
+              class="form-control w-50"
+              id="toDT"
+              name="toDT"
+            />
+          </div>
+        </div>
+        <hr />
+
+        <!-- ─────────────────────── Group 2: Officer & Source Info ─────────────────────── -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">
+          Officer &amp; Source Details
+        </h4>
+
+        <!-- Circle Mining Office -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Circle Mining Office</label>
+            <input
+              type="text"
+              class="form-control w-50"
+              value="Bhadrak"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- Quarry/Source -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Quarry/Lease/Source</label>
+            <input
+              type="text"
+              class="form-control w-50"
+              value="Mankidia - (KA)"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- Licensee -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Licensee/Lessee</label>
+            <input
+              type="text"
+              class="form-control w-50"
+              value="Susanta Kumar Sahoo"
+              readonly
+            />
+          </div>
+        </div>
+        <hr />
+
+        <!-- ─────────────────────── Group 3: Permit Details ─────────────────────── -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">Permit Details</h4>
+
+        <!-- Destination -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Destination</label>
+            <textarea
+              class="form-control w-50"
+              id="dest"
+              name="dest"
+              placeholder="Enter Destination"
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Route -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Route</label>
+            <textarea
+              class="form-control w-50"
+              id="route"
+              name="route"
+              placeholder="Enter Route"
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Mineral -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Minor Mineral</label>
+            <input
+              class="form-control w-50"
+              id="mineral"
+              name="mineral"
+              value="SAND"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- Permit No -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Permit No.</label>
+            <input
+              class="form-control w-50"
+              id="permit"
+              name="permit"
+              placeholder="Enter Permit Number"
+            />
+          </div>
+        </div>
+
+        <!-- Permit Date -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Permit Date</label>
+            <input
+              type="date"
+              class="form-control w-50"
+              id="permitDate"
+              name="permitDate"
+            />
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Quantity (Cum)</label>
+            <select class="form-select w-50" id="qty" name="qty">
+              <option value="18.00 Cum">18 Cum</option>
+              <option value="30.00 Cum">30 Cum</option>
+              <option value="22.00 Cum">22 Cum</option>
+              <option value="14.00 Cum">14 Cum</option>
+              <option value="8.00 Cum">8 Cum</option>
+              <option value="5.00 Cum">5 Cum</option>
+              <option value="3.00 Cum">3 Cum</option>
+              <option value="2.00 Cum">2 Cum</option>
+            </select>
+          </div>
+        </div>
+        <hr />
+
+        <!-- ─────────────────────── Group 4: Vehicle & Measurements ─────────────────────── -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">
+          Vehicle &amp; Measurement Details
+        </h4>
+
+        <!-- Vehicle No -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Vehicle No.</label>
+            <input
+              class="form-control w-50"
+              id="vehicle"
+              name="vehicle"
+              value="OD34U6615"
+            />
+          </div>
+        </div>
+
+        <!-- Length -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Length (m)</label>
+            <input
+              class="form-control w-50"
+              id="len"
+              name="len"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <!-- Breadth -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Breadth (m)</label>
+            <input
+              class="form-control w-50"
+              id="br"
+              name="br"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <!-- Height -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Height (m)</label>
+            <input
+              class="form-control w-50"
+              id="ht"
+              name="ht"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <!-- Cubic Content -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Cubic Content (Cum)</label>
+            <input
+              class="form-control w-50"
+              id="cc"
+              name="cc"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+        <hr />
+
+        <!-- ─────────────────────── Group 5: Weight Details ─────────────────────── -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">Weight Details</h4>
+
+        <!-- Gross Weight -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Gross Weight (T)</label>
+            <input
+              class="form-control w-50"
+              id="gw"
+              name="gw"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <!-- Tare Weight -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Tare Weight (T)</label>
+            <input
+              class="form-control w-50"
+              id="tw"
+              name="tw"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <!-- Mineral Weight -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Mineral Weight (T)</label>
+            <input
+              class="form-control w-50"
+              id="mw"
+              name="mw"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- ─────────────────────── Group 6: Additional Details ─────────────────────── -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">Additional Details</h4>
+
+        <!-- Driver Name -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Driver Name</label>
+            <input
+              class="form-control w-50"
+              id="driverName"
+              name="driverName"
+              placeholder="Enter Driver Name"
+            />
+          </div>
+        </div>
+
+        <!-- District -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">District Name</label>
+            <input
+              class="form-control w-50"
+              id="district"
+              name="district"
+              placeholder="Enter District"
+            />
+          </div>
+        </div>
+
+        <!-- Tahasil -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Tahasil Name</label>
+            <input
+              class="form-control w-50"
+              id="tahasil"
+              name="tahasil"
+              placeholder="Enter Tahasil"
+            />
+          </div>
+        </div>
+
+        <!-- Carrier Type -->
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="d-flex align-items-center">
+            <label class="form-label me-2 w-50">Carrier Type</label>
+            <input
+              class="form-control w-50"
+              id="carrierType"
+              name="carrierType"
+              placeholder="e.g., Hiwa - 12 Wheel - 14 CuM"
+            />
+          </div>
+        </div>
+
+        <hr />
+        <!-- ─────────────────────── Submit Button ─────────────────────── -->
+        <div class="col-12 text-center mt-4">
+          <button type="submit" class="btn btn-primary px-4 me-2">
+            Generate Transit Pass
+          </button>
+          <button type="reset" class="btn btn-secondary px-4">
+            Clear Form
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+      let API_URL = "http://localhost:3000/api/transit-pass";
+
+      // Load API URL from config
+      async function initializeAPI() {
+        try {
+          const response = await fetch('/api/config');
+          if (response.ok) {
+            const config = await response.json();
+            API_URL = config.API_URL;
+            console.log('Using API URL from .env:', API_URL);
+          }
+        } catch (error) {
+          console.log('Using default API URL:', API_URL);
+        }
+      }
+
+      // Initialize API on page load
+      window.addEventListener('load', initializeAPI);
+
+      function fmt(dt) {
+        if (!dt) return "";
+        const d = new Date(dt);
+        return (
+          d.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }) +
+          " " +
+          d.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          })
+        );
+      }
+
+      document.getElementById("form").onsubmit = async function (e) {
+        e.preventDefault();
+
+        try {
+          const formData = {
+            book: document.getElementById("book").value,
+            fromDT: document.getElementById("fromDT").value,
+            toDT: document.getElementById("toDT").value,
+            dest: document.getElementById("dest").value.toUpperCase(),
+            route: document.getElementById("route").value.toUpperCase(),
+            permit: document.getElementById("permit").value.toUpperCase(),
+            permitDate: document.getElementById("permitDate").value,
+            qty: document.getElementById("qty").value,
+            vehicle: document.getElementById("vehicle").value.toUpperCase(),
+            len: document.getElementById("len").value,
+            br: document.getElementById("br").value,
+            ht: document.getElementById("ht").value,
+            cc: document.getElementById("cc").value,
+            gw: document.getElementById("gw").value,
+            tw: document.getElementById("tw").value,
+            mw: document.getElementById("mw").value,
+            driverName: document
+              .getElementById("driverName")
+              .value.toUpperCase(),
+            district: document.getElementById("district").value.toUpperCase(),
+            tahasil: document.getElementById("tahasil").value.toUpperCase(),
+            carrierType: document
+              .getElementById("carrierType")
+              .value.toUpperCase(),
+          };
+
+          // Send data to server (which generates the pass number)
+          const response = await fetch(`${API_URL}/create`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert("Transit Pass saved to database successfully!");
+            console.log("Saved Pass:", result.data);
+
+            // Redirect to transit-pass.html with pass ID
+            const passId = result.data._id;
+            window.location.href = `transit-pass.html?id=${passId}`;
+          } else {
+            alert("Error saving to database: " + result.message);
+          }
+        } catch (error) {
+          console.warn("Server not available:", error.message);
+          alert(
+            "Unable to connect to server. Please ensure the backend is running on localhost:3000"
+          );
+        }
+      };
+
+      function displayPass(pn, formData, passId) {
+        // Handle both formats: if formData has fromDateTime (server format) or fromDT (form format)
+        const fromDT = formData.fromDateTime || formData.fromDT;
+        const toDT = formData.toDateTime || formData.toDT;
+
+        const data = {
+          pass: pn,
+          book: formData.book || "",
+          dt: fmt(fromDT) + " - " + fmt(toDT),
+          circle: formData.circle || "BHADRAK",
+          quarry: formData.quarry || "MANKIDIA - KA",
+          license: formData.licensee || "SUSANTA KUMAR SAHOO",
+          dest: formData.destination || formData.dest || "",
+          route: formData.route || "",
+          mineral: formData.mineral || "SAND",
+          permit: formData.permitNo || formData.permit || "",
+          pdate: formData.permitDate || "",
+          qty: formData.quantity || formData.qty || "",
+          veh: formData.vehicle || "",
+          len: formData.length || formData.len || "",
+          br: formData.breadth || formData.br || "",
+          ht: formData.height || formData.ht || "",
+          cc: formData.cubicContent || formData.cc || "",
+          gw: formData.grossWeight || formData.gw || "",
+          tw: formData.tareWeight || formData.tw || "",
+          mw: formData.mineralWeight || formData.mw || "",
+        };
+
+        const map = {
+          p1: "pass",
+          p2: "pass",
+          b1: "book",
+          b2: "book",
+          dt1: "dt",
+          dt2: "dt",
+          c1: "circle",
+          c2: "circle",
+          q1: "quarry",
+          q2: "quarry",
+          l1: "license",
+          l2: "license",
+          d1: "dest",
+          d2: "dest",
+          r1: "route",
+          r2: "route",
+          m1: "mineral",
+          m2: "mineral",
+          pm1: "permit",
+          pm2: "permit",
+          pd1: "pdate",
+          pd2: "pdate",
+          qnt1: "qty",
+          qnt2: "qty",
+          v1: "veh",
+          v2: "veh",
+          ln1: "len",
+          ln2: "len",
+          br1: "br",
+          br2: "br",
+          ht1: "ht",
+          ht2: "ht",
+          cc1: "cc",
+          cc2: "cc",
+          gw1: "gw",
+          gw2: "gw",
+          tw1: "tw",
+          tw2: "tw",
+          mw1: "mw",
+          mw2: "mw",
+        };
+
+        for (let id in map) {
+          const el = document.getElementById(id);
+          if (el) el.textContent = data[map[id]];
+        }
+
+        const qr1 = document.getElementById("qr1");
+        const qr2 = document.getElementById("qr2");
+        if (qr1 && qr2) {
+          qr1.innerHTML = "";
+          qr2.innerHTML = "";
+          // Generate QR codes with link to pass detail page
+          const detailUrl = `${window.location.origin}/pass-detail.html?id=${passId}`;
+          new QRCode(qr1, { text: detailUrl, width: 80, height: 80 });
+          new QRCode(qr2, { text: detailUrl, width: 80, height: 80 });
+        }
+
+        const passPage = document.getElementById("passPage");
+        if (passPage) {
+          passPage.style.display = "block";
+          passPage.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    </script>
+  </body>
+</html>

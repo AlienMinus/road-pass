@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Transit Pass Detail</title>
+    <link rel="shortcut icon" href="logo.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+      body {
+        background: #f5f5f5;
+        padding: 0;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial,
+          sans-serif;
+      }
+
+      .detail-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background: white;
+        min-height: 100vh;
+      }
+
+      .pass-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 20px;
+        border-bottom: 2px solid #f0f0f0;
+        background: #fafafa;
+      }
+
+      .back-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        margin-right: 10px;
+        color: #ff6b35;
+      }
+
+      .pass-number {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ff6b35;
+        flex: 1;
+      }
+
+      .status-badge {
+        font-size: 16px;
+        font-weight: 700;
+        padding: 6px 15px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+
+      .status-valid {
+        /* background-color: #d4edda; */
+        color: #155724;
+      }
+
+      .status-expired {
+        /* background-color: #f8d7da; */
+        color: #721c24;
+      }
+
+      .pass-details {
+        padding: 20px;
+      }
+
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 12px 0;
+        border-bottom: 1px dotted #d0d0d0;
+      }
+
+      .detail-item:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: #888;
+        font-size: 13px;
+        flex: 0 0 45%;
+        line-height: 1.4;
+      }
+
+      .detail-value {
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: right;
+        flex: 1;
+        word-break: break-word;
+        line-height: 1.4;
+      }
+
+      .qr-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 30px 20px;
+        border-top: 2px solid #f0f0f0;
+        margin-top: 20px;
+      }
+
+      .qr-section small {
+        display: block;
+        margin-top: 8px;
+        color: #999;
+        font-size: 12px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        padding: 20px;
+        justify-content: center;
+      }
+
+      .btn-custom {
+        padding: 10px 20px;
+        font-weight: 600;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .btn-print {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-print:active {
+        background: #764ba2;
+      }
+
+      .btn-back {
+        background: #ddd;
+        color: #333;
+      }
+
+      .btn-back:active {
+        background: #ccc;
+      }
+
+      .btn-view {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-view:active {
+        background: #218838;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 50px 20px;
+        color: #667eea;
+      }
+
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px 20px;
+        border-left: 4px solid #dc3545;
+        margin: 20px;
+        border-radius: 4px;
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+
+        .pass-header {
+          background: white;
+        }
+
+        .button-group,
+        .qr-section {
+          display: none;
+        }
+
+        .detail-container {
+          max-width: 100%;
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="detail-container">
+      <div id="loadingMessage" class="loading" style="display: none">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Loading pass details...</p>
+      </div>
+
+      <div id="errorMessage" style="display: none"></div>
+
+      <div id="passDetail" style="display: none">
+        <div class="pass-header">
+          <button class="back-btn" onclick="history.back()">←</button>
+          <div>
+            <div class="pass-number" id="passNumber">A2512010003/1/197</div>
+          </div>
+          <div class="status-badge" id="statusBadge"></div>
+        </div>
+
+        <div class="pass-details">
+          <div class="detail-item">
+            <span class="detail-label">Name of the Lessee</span>
+            <span class="detail-value" id="licensee">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Pass no.</span>
+            <span class="detail-value" id="passNo">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Minor Mineral</span>
+            <span class="detail-value" id="mineral">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Pass Validity</span>
+            <span class="detail-value" id="validity">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Destination</span>
+            <span class="detail-value" id="destination">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Route</span>
+            <span class="detail-value" id="route">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Cubic Content</span>
+            <span class="detail-value" id="cubicContent">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Carrier Registration No.</span>
+            <span class="detail-value" id="vehicle">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Mineral Wt</span>
+            <span class="detail-value" id="mineralWeight">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Driver Name</span>
+            <span class="detail-value" id="driverName">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Source Name</span>
+            <span class="detail-value" id="quarry">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Circle Name</span>
+            <span class="detail-value" id="circle">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">District Name</span>
+            <span class="detail-value" id="district">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tahasil Name</span>
+            <span class="detail-value" id="tahasil">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Gross Weight</span>
+            <span class="detail-value" id="grossWeight">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tare Weight</span>
+            <span class="detail-value" id="tareWeight">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Carrier Type</span>
+            <span class="detail-value" id="carrierType">-</span>
+          </div>
+        </div>
+
+        <div class="qr-section">
+          <div id="qrCode"></div>
+          <small>Scan to view this pass</small>
+        </div>
+
+        <div class="button-group">
+          <button class="btn-custom btn-print" onclick="window.print()">
+            🖨️ Print
+          </button>
+          <button class="btn-custom btn-view" onclick="viewPass()">
+            📄 View Pass
+          </button>
+          <button class="btn-custom btn-back" onclick="history.back()">
+            ← Back
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+      let API_URL = "http://localhost:3000/api/transit-pass";
+
+      // Load API URL from config
+      async function initializeAPI() {
+        try {
+          const response = await fetch('/api/config');
+          if (response.ok) {
+            const config = await response.json();
+            API_URL = config.API_URL;
+            console.log('Using API URL from .env:', API_URL);
+          }
+        } catch (error) {
+          console.log('Using default API URL:', API_URL);
+        }
+      }
+
+      // Format date to readable format
+      function formatDate(isoString) {
+        if (!isoString) return "N/A";
+        const date = new Date(isoString);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = date.toLocaleString("en-US", { month: "short" });
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+      }
+
+      // Get pass status
+      function getPassStatus(fromDateTime, toDateTime) {
+        const now = new Date();
+        const to = new Date(toDateTime);
+
+        if (now <= to) {
+          return { status: "Valid", class: "status-valid" };
+        } else {
+          return { status: "Expired", class: "status-expired" };
+        }
+      }
+
+      // Get pass ID from URL
+      function getPassIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("id");
+      }
+
+      // Load pass details
+      // View Pass - Navigate to transit-pass.html
+      function viewPass() {
+        const passId = getPassIdFromUrl();
+        if (passId) {
+          window.location.href = `transit-pass.html?id=${passId}`;
+        } else {
+          alert("Pass ID not found");
+        }
+      }
+
+      // Load pass details
+      async function loadPassDetails() {
+        const passId = getPassIdFromUrl();
+        const loadingMsg = document.getElementById("loadingMessage");
+        const errorMsg = document.getElementById("errorMessage");
+        const passDetail = document.getElementById("passDetail");
+
+        if (!passId) {
+          errorMsg.style.display = "block";
+          errorMsg.innerHTML =
+            '<div class="error">No pass ID provided in URL</div>';
+          loadingMsg.style.display = "none";
+          return;
+        }
+
+        loadingMsg.style.display = "block";
+
+        try {
+          const response = await fetch(`${API_URL}/${passId}`);
+          const result = await response.json();
+
+          loadingMsg.style.display = "none";
+
+          if (!result.success || !result.data) {
+            errorMsg.style.display = "block";
+            errorMsg.innerHTML = '<div class="error">Pass not found</div>';
+            return;
+          }
+
+          const pass = result.data;
+          const { status, class: statusClass } = getPassStatus(
+            pass.fromDateTime,
+            pass.toDateTime
+          );
+
+          // Populate data
+          document.getElementById("passNumber").textContent = pass.passNo;
+          const statusBadge = document.getElementById("statusBadge");
+          statusBadge.textContent = status;
+          statusBadge.className = `status-badge ${statusClass}`;
+
+          // Pass details
+          document.getElementById("licensee").textContent =
+            pass.licensee || "-";
+          document.getElementById("passNo").textContent = pass.passNo;
+          document.getElementById("mineral").textContent = pass.mineral || "-";
+          document.getElementById("validity").textContent =
+            formatDate(pass.fromDateTime) + " - " + formatDate(pass.toDateTime);
+          document.getElementById("destination").textContent =
+            pass.destination || "-";
+          document.getElementById("route").textContent = pass.route || "-";
+          document.getElementById("cubicContent").textContent =
+            pass.cubicContent || "-";
+          document.getElementById("vehicle").textContent = pass.vehicle || "-";
+          document.getElementById("mineralWeight").textContent =
+            pass.mineralWeight || "-";
+          document.getElementById("driverName").textContent =
+            pass.driverName || "-";
+          document.getElementById("quarry").textContent = pass.quarry || "-";
+          document.getElementById("circle").textContent = pass.circle || "-";
+          document.getElementById("district").textContent =
+            pass.district || "-";
+          document.getElementById("tahasil").textContent = pass.tahasil || "-";
+          document.getElementById("grossWeight").textContent =
+            pass.grossWeight || "-";
+          document.getElementById("tareWeight").textContent =
+            pass.tareWeight || "-";
+          document.getElementById("carrierType").textContent =
+            pass.carrierType || "-";
+
+          // Generate QR Code with link to this page
+          const qrCode = document.getElementById("qrCode");
+          qrCode.innerHTML = "";
+          const detailUrl = `${window.location.origin}/pass-detail.html?id=${pass._id}`;
+          new QRCode(qrCode, { text: detailUrl, width: 150, height: 150 });
+
+          errorMsg.style.display = "none";
+          passDetail.style.display = "block";
+        } catch (error) {
+          loadingMsg.style.display = "none";
+          errorMsg.style.display = "block";
+          errorMsg.innerHTML = `
+          <div class="error">
+            <strong>Error:</strong> Unable to load pass details<br/>
+            <small>${error.message}</small>
+          </div>
+        `;
+          console.error("Error loading pass:", error);
+        }
+      }
+
+      // Load on page load
+      window.addEventListener("load", () => {
+        initializeAPI().then(() => loadPassDetails());
+      });
+    </script>
+  </body>
+</html>
