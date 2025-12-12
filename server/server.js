@@ -39,7 +39,7 @@ app.get('/api/health', (req, res) => {
 // Config endpoint - expose environment config to frontend
 app.get('/api/config', (req, res) => {
   res.json({
-    API_URL: process.env.API_URL || 'http://localhost:3000/api/transit-pass',
+    API_URL: process.env.API_URL || 'https://road-pass.onrender.com/api/transit-pass',
     ADMIN_ID: process.env.ADMIN_ID || 'admin',
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? '12345' : 'not-set'
   });

@@ -5,7 +5,7 @@
 const DEFAULT_CONFIG = {
   ADMIN_ID: 'admin',
   ADMIN_PASSWORD: '12345',
-  API_URL: 'http://localhost:3000/api/transit-pass'
+  API_URL: 'https://road-pass.onrender.com/api/transit-pass'
 };
 
 // Try to fetch config from server (best practice for frontend)
