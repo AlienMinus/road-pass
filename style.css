@@ -100,7 +100,7 @@ label {
 }
 /* Row with two Q&A pairs on one line */
 .row.two-items {
-    grid-template-columns: 37% 11% 13% 45% !important;
+    grid-template-columns: 15% 18% 14% 52% !important;
     column-gap: 5px !important;
     margin: 2px 0;
 }
