@@ -8,15 +8,12 @@ router.post('/create', async (req, res) => {
     // Generate pass number in format: A25{MMDDHHMMSS}/1/{serial}
     const { passNo, serial } = await TransitPass.generatePassNo();
 
-    const fromDT = new Date(req.body.fromDT + 'Z');
-    const toDT = new Date(req.body.toDT + 'Z');
-
     const passData = {
       passNo: passNo,
       serial: serial,
       book: req.body.book,
-      fromDateTime: fromDT,
-      toDateTime: toDT,
+      fromDateTime: req.body.fromDT,
+      toDateTime: req.body.toDT,
       circle: 'BHADRAK',
       quarry: 'MANKIDIA - KA',
       licensee: 'SUSANTA KUMAR SAHOO',
