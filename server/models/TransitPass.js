@@ -61,11 +61,14 @@ transitPassSchema.statics.generatePassNo = async function() {
   const year = now.getFullYear().toString().slice(-2);
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const time = now.toLocaleTimeString('en-US', {
+    hour12: true,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }).replace(/[\s:]/g, '');
   
-  const dateTimeStr = `${month}${day}${hours}${minutes}${seconds}`;
+  const dateTimeStr = `${month}${day}${time}`;
   const passNo = `A25${dateTimeStr}/1/${serial}`;
   
   return { passNo, serial };

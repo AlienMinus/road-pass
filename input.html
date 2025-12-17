@@ -39,10 +39,11 @@
           <div class="d-flex align-items-center">
             <label class="form-label me-2 w-50">From Date &amp; Time</label>
             <input
-              type="datetime-local"
+              type="text"
               class="form-control w-50"
               id="fromDT"
               name="fromDT"
+              placeholder="MM/DD/YYYY hh:mm AM/PM"
             />
           </div>
         </div>
@@ -52,10 +53,11 @@
           <div class="d-flex align-items-center">
             <label class="form-label me-2 w-50">To Date &amp; Time</label>
             <input
-              type="datetime-local"
+              type="text"
               class="form-control w-50"
               id="toDT"
               name="toDT"
+              placeholder="MM/DD/YYYY hh:mm AM/PM"
             />
           </div>
         </div>
@@ -404,18 +406,16 @@
         if (!dt) return "";
         const d = new Date(dt);
         return (
-          d.toLocaleDateString("en-GB", {
+          d.toLocaleDateString("en-US", {
             day: "2-digit",
             month: "short",
             year: "numeric",
           }) +
           " " +
-          d.toLocaleTimeString("en-GB", {
+          d.toLocaleTimeString("en-US", {
             hour: "2-digit",
             minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-            timeZone: 'UTC'
+            hour12: true,
           })
         );
       }
