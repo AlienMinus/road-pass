@@ -14,7 +14,7 @@ const transitPassSchema = new mongoose.Schema({
   route: String,
   mineral: String,
   permitNo: String,
-  permitDate: Date,
+  permitDate: String, // YYYY-MM-DD
   quantity: String,
   vehicle: String,
   length: String,

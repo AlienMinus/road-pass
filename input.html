@@ -39,11 +39,10 @@
           <div class="d-flex align-items-center">
             <label class="form-label me-2 w-50">From Date &amp; Time</label>
             <input
-              type="text"
+              type="datetime-local"
               class="form-control w-50"
               id="fromDT"
               name="fromDT"
-              placeholder="MM/DD/YYYY hh:mm AM/PM"
             />
           </div>
         </div>
@@ -53,11 +52,10 @@
           <div class="d-flex align-items-center">
             <label class="form-label me-2 w-50">To Date &amp; Time</label>
             <input
-              type="text"
+              type="datetime-local"
               class="form-control w-50"
               id="toDT"
               name="toDT"
-              placeholder="MM/DD/YYYY hh:mm AM/PM"
             />
           </div>
         </div>
@@ -406,16 +404,18 @@
         if (!dt) return "";
         const d = new Date(dt);
         return (
-          d.toLocaleDateString("en-US", {
+          d.toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "short",
             year: "numeric",
           }) +
           " " +
-          d.toLocaleTimeString("en-US", {
+          d.toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
-            hour12: true,
+            second: "2-digit",
+            hour12: false,
+            timeZone: 'UTC'
           })
         );
       }
@@ -479,100 +479,6 @@
           );
         }
       };
-
-      function displayPass(pn, formData, passId) {
-        // Handle both formats: if formData has fromDateTime (server format) or fromDT (form format)
-        const fromDT = formData.fromDateTime || formData.fromDT;
-        const toDT = formData.toDateTime || formData.toDT;
-
-        const data = {
-          pass: pn,
-          book: formData.book || "",
-          dt: fmt(fromDT) + " - " + fmt(toDT),
-          circle: formData.circle || "BHADRAK",
-          quarry: formData.quarry || "MANKIDIA - KA",
-          license: formData.licensee || "SUSANTA KUMAR SAHOO",
-          dest: formData.destination || formData.dest || "",
-          route: formData.route || "",
-          mineral: formData.mineral || "SAND",
-          permit: formData.permitNo || formData.permit || "",
-          pdate: formData.permitDate || "",
-          qty: formData.quantity || formData.qty || "",
-          veh: formData.vehicle || "",
-          len: formData.length || formData.len || "",
-          br: formData.breadth || formData.br || "",
-          ht: formData.height || formData.ht || "",
-          cc: formData.cubicContent || formData.cc || "",
-          gw: formData.grossWeight || formData.gw || "",
-          tw: formData.tareWeight || formData.tw || "",
-          mw: formData.mineralWeight || formData.mw || "",
-        };
-
-        const map = {
-          p1: "pass",
-          p2: "pass",
-          b1: "book",
-          b2: "book",
-          dt1: "dt",
-          dt2: "dt",
-          c1: "circle",
-          c2: "circle",
-          q1: "quarry",
-          q2: "quarry",
-          l1: "license",
-          l2: "license",
-          d1: "dest",
-          d2: "dest",
-          r1: "route",
-          r2: "route",
-          m1: "mineral",
-          m2: "mineral",
-          pm1: "permit",
-          pm2: "permit",
-          pd1: "pdate",
-          pd2: "pdate",
-          qnt1: "qty",
-          qnt2: "qty",
-          v1: "veh",
-          v2: "veh",
-          ln1: "len",
-          ln2: "len",
-          br1: "br",
-          br2: "br",
-          ht1: "ht",
-          ht2: "ht",
-          cc1: "cc",
-          cc2: "cc",
-          gw1: "gw",
-          gw2: "gw",
-          tw1: "tw",
-          tw2: "tw",
-          mw1: "mw",
-          mw2: "mw",
-        };
-
-        for (let id in map) {
-          const el = document.getElementById(id);
-          if (el) el.textContent = data[map[id]];
-        }
-
-        const qr1 = document.getElementById("qr1");
-        const qr2 = document.getElementById("qr2");
-        if (qr1 && qr2) {
-          qr1.innerHTML = "";
-          qr2.innerHTML = "";
-          // Generate QR codes with link to pass detail page
-          const detailUrl = `${window.location.origin}/pass-detail.html?id=${passId}`;
-          new QRCode(qr1, { text: detailUrl, width: 80, height: 80 });
-          new QRCode(qr2, { text: detailUrl, width: 80, height: 80 });
-        }
-
-        const passPage = document.getElementById("passPage");
-        if (passPage) {
-          passPage.style.display = "block";
-          passPage.scrollIntoView({ behavior: "smooth" });
-        }
-      }
     </script>
   </body>
 </html>
