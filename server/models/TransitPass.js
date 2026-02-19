@@ -56,12 +56,12 @@ transitPassSchema.statics.generatePassNo = async function() {
   
   const serial = todayCount + 1;
   
-  // Format: A25{MMDDHHSS}/1/{serial}
+  // Format: A25{MMDDHHMMSS}/1/{serial}
   const now = new Date();
   const year = now.getFullYear().toString().slice(-2);
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
-  const time = now.toLocaleTimeString('en-US', {
+  const time = now.toLocaleTimeString('en-US', { // removed AM/PM
     hour12: true,
     hour: '2-digit',
     minute: '2-digit',
