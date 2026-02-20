@@ -554,7 +554,9 @@
 
       // Get pass status
       function getPassStatus(fromDateTime, toDateTime) {
-        const now = new Date();
+        const d = new Date();
+        // Compare local wall time against the stored UTC time (which represents wall time)
+        const now = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()));
         const to = new Date(toDateTime);
 
         if (now <= to) {

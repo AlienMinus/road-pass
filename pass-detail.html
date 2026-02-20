@@ -356,10 +356,10 @@
 
       // Get pass status
       function getPassStatus(fromDateTime, toDateTime) {
-        const now = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate(), new Date().getUTCHours(), new Date().getUTCMinutes(), new Date().getUTCSeconds()));
-        const to = new Date(Date.UTC(new Date(toDateTime).getUTCFullYear(), new Date(toDateTime).getUTCMonth(), new Date(toDateTime).getUTCDate(), new Date(toDateTime).getUTCHours(), new Date(toDateTime).getUTCMinutes(), new Date(toDateTime).getUTCSeconds()));
-        console.log("Current Time (UTC):", now);
-        console.log("Pass To Time (UTC):", to);
+        const d = new Date();
+        // Compare local wall time against the stored UTC time (which represents wall time)
+        const now = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()));
+        const to = new Date(toDateTime);
 
         if (now <= to) {
           return { status: "Valid", class: "status-valid" };
