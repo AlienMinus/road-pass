@@ -62,7 +62,7 @@ transitPassSchema.statics.generatePassNo = async function() {
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
   const time = now.toLocaleTimeString('en-US', { // removed AM/PM
-    hour12: true,
+    hour12: false,
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit'
